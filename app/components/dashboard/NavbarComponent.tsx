@@ -1,18 +1,19 @@
 import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { CircleUser, MenuIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 import NavbarLink from "./NavbarLink";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import NavbarProfile from "./NavbarProfile";
 
-export const DashboardNavbar = () => {
+export const DashboardNavbar = async () => {
+	const {getUser} = getKindeServerSession();
+	const user = await getUser();
+	if(!user || user.email !== process.env.ADMIN_MAIL){
+		return redirect("/");
+	}
+
 	return (
 		<>
 			<header className="sticky top-0 flex h-16 items-center justify-between gap-4 border-b bg-white">
@@ -42,23 +43,7 @@ export const DashboardNavbar = () => {
 				</div>
 
 				{/* User profile */}
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button
-							variant="secondary"
-							size="icon"
-							className="rounded-full"
-						>
-							<CircleUser className="w-5 h-5" />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>My Account</DropdownMenuLabel>
-						<DropdownMenuItem>Settings</DropdownMenuItem>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>Logout</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<NavbarProfile />
 			</header>
 		</>
 	);
