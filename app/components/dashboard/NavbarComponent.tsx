@@ -10,7 +10,7 @@ import NavbarProfile from "./NavbarProfile";
 export const DashboardNavbar = async () => {
 	const {getUser} = getKindeServerSession();
 	const user = await getUser();
-	if(!user || user.email !== process.env.ADMIN_MAIL){
+	if(!user || user.email !== process.env.ADMIN_MAIL_1 || user.email !== process.env.ADMIN_MAIL_2) {
 		return redirect("/");
 	}
 
